@@ -1,0 +1,176 @@
+# Guide de débbuggage
+</br>
+
+
+**Avant de commencer le guide je vous propose un petit lexique des mots à connaître**
+
+routeur = ou passerelle est un équipement réseau (physique) qui permet de relier 2 réseaux entre eux et/ou accèder à Internet   </br></br>
+route =  Quand on parle de route ou route par défault, on parle du chemin que prend un paquet pour circuler sur le réseau ou sur internet. Quand on veux sortir sur internet il faut donc mettre le routeur comme route par défault </br> </br>
+Ip =  C'est le numéro qui a cette forme : X.Y.A.B il s'agit de l'adresse assigner à une machine sur un réseau (PC,imprimante,serveur, routeur etc...)  </br></br>
+DNS= Domain Name Service , C'est un service qui permet d'associer un nom de domaine (www.google.fr) à l'adresse ip du serveur par exemple 8.8.8.8 ce qui nous permet de pouvoir taper le nom de domain d'un site au lieu de devoir taper l'addresse IP du serveur en question </br></br>
+interface = Il s'agit de l'interface Ethernet </br>
+cmd = Il s'agit d'une console qui permet de taper des commandes pour l'ouvrir win + r et taper cmd et sur linux :</br>
+
+
+**Etape 1 -Vérifier que l'ordinateur est connecté physiquement au réseau**
+
+</br>
+
+![image](/Images/Cable-RJ45-2-NF-scaled.jpg)
+
+</br>
+</br>
+</br>
+1- Assurez vous d'avoir branché votre câble RJ45 (Ethernet) des 2 cotés :
+
+</br>
+</br>
+</br>
+
+Coté prise (goulotte) :
+
+![image](/Images/Snapchat-1280117141.jpg)
+
+</br>
+</br>
+</br>
+
+Et coté PC :
+
+![image](Images/Snapchat-1058067626.jpg)
+
+</br>
+</br>
+</br>
+
+**Etape 2- Vérifiez que la carte réseau du pc est allumée**
+
+</br>
+</br>
+</br>
+
+Pour vérifier, il suffit d'ouvrir un cmd est de taper la commande suivante : 
+
+</br>
+
+`ip link` sur linux </br>
+
+![image](/Images/kuroikenshi.jpg)
+* On peux voir sur le screen qu'il y marqué UP donc la carte réseau est allumé.
+
+`ipconfig` sur **windows**
+
+</br>
+</br>
+</br>
+
+
+![image](/Images/unnamed.png)
+
+</br>
+Sur ce screen on peux voir que la carte réseau est éteinte ou le câble n'est pas branché
+</br>
+
+![image](/Images/ipconfigmarche.png)
+
+
+Et lorsque la carte réseau est allumée et le câble bien branché, elle affiche sa.
+
+</br>
+</br>
+</br>
+
+**Etape 3- Vérifier que l'ordinateur a une adresse IP**
+
+</br>
+</br>
+</br>
+
+Pour cela on ouvre un cmd, et on tape la commande suivante :
+
+</br>
+
+`ipconfig` sur **windows**
+
+`ip a (interface)` sur **linux**
+
+![image](/Images/ip_a.jpg)
+
+* enp0s25 est le nom de mon interface il faut donc mettre votre interface
+
+</br>
+</br>
+
+**Etape4- Vérifier que il y a une route par défaut**
+
+</br>
+</br>
+</br>
+
+Pour ça on ouvre un cmd (encore une fois) et on tape la commande suivante :
+
+</br>
+
+`route print` sur **windows**</br>
+`ip route show` sur **linux**</br>
+
+
+![image](/Images/ip_route.jpg)
+
+</br>
+</br>
+
+Comme on peut le voir sur la photo, il y a une route par défaut, donc pas besoin d'en ajouter une. Si ce n'était pas le cas pour ajouter une route par défaut on fait la commande suivant :
+
+</br>
+
+`ip route add default @adresse_ip dev interface`
+
+</br>
+</br>
+</br>
+
+**Etape 5- Vérifiez que le DNS est opérationnel**
+
+</br>
+
+Pour le vérifier, on ouvre un cmd, et on tape la commande suivante :
+
+</br>
+
+`ping www.google.fr`
+
+</br>
+
+![image](/Images/ping_google.jpg)
+
+Si cela fonctionne, c'est à dire que l'on reçoit une réponse. Le dns est opérationnel, si cela ne marche pas on essaye la commande suivante :
+
+</br>
+
+`ping 8.8.8.8`
+
+</br>
+
+![image](/Images/ping_8888_op.jpg)
+
+Si là, on reçoit une réponse, c'est qu'il y a un problème au niveau du DNS et qu'il n'arrive pas à trouver l'adresse du serveur associé. Ce qui explique que lorsque on lui donne une adresse IP directement on peux ping le serveur.
+
+
+</br>
+</br>
+
+# Commandes windows & Linux
+
+| Fonction de la commande                                                               | Commande sur linux | Commande sur windows |
+|---------------------------------------------------------------------------------------|--------------------|----------------------|
+| Affiche les propriétés  IP de la carte réseau                                         | ip a               | ipconfig             |
+| Permet d'afficher l'IP des routeurs qui sont entre  le client et l'ip du destinataire | traceroute -n         | traceroute -d           |
+| Permet de tester si une machine est joignable                                         | ping               | ping                 |
+| Permet d'afficher les différentes routes                                              | ip route           | route print          |
+| Permet d'assigner une adresse IP et une route par  défaut                             | dhclient           | ipconfig /renew      |
+|                     Permet d'afficher les ports                                                                  |               netstat -a     |      netstat -a                |
+| Afficher des informations sur les composants notamment la carte réseau           | ip link |   systeminfo
+|                                                                           Permet d'afficher la table ARP et la liaisons entre les adresses macs et ip            |      arp -a              |                  arp -a    |
+|                                                                             Perrmet de faire des requêtes HTTP, HTTPS ou FTP aux serveurs à distance          |       curl             |                  wget    |
+|                                                                              Permet de se connecter à un équipement à distance et pouvoir le manipuler         |       ssh             |                  ssh     | 
